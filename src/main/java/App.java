@@ -1,11 +1,18 @@
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
@@ -20,14 +27,30 @@ import javafx.scene.image.ImageView;
 import javax.swing.text.html.Option;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Observable;
 import java.util.Optional;
+
+/**
+ * 1.
+ */
 
 public class App extends Application{
 
     public static Stage window = new Stage();
+    public static Group root = new Group();
+    public static GridPane grid = new GridPane();
+    public static ListView<Word> wordList = new ListView<Word>();
     private final int WIDTH = 960;
     private final int HEIGHT = 740;
+
+    /**
+     * Phần này demo app thôi, lúc làm thì xóa đi.
+     */
+    Word word1 = new Word("hello", "xin chào", "Động từ");
+    Word word2 = new Word("apple", "qua tao", "Danh từ");
 
 
     @Override
@@ -43,6 +66,7 @@ public class App extends Application{
     }
 
     private void initLoadingWindow() throws FileNotFoundException, InterruptedException {
+
         window.setTitle("DTL Dictionary");
         Group root = new Group();
 
@@ -64,7 +88,7 @@ public class App extends Application{
 
     private void isRunning() throws FileNotFoundException {
 
-        Group root = new Group();
+
 
 //        GridPane grid = new GridPane();
 
@@ -116,13 +140,18 @@ public class App extends Application{
         input.setLayoutX(38);
         input.setScaleX(1.2);
         input.setLayoutY(120);
+//        ObservableList<Word> foundedWord = FXCollections.observableArrayList();
         input.setPromptText("Search");
+
         input.setOnAction(e -> {
 
             String inputRes = input.getText();
-            //inputRes là biến được người dùng nhập vào từ ô search.
+
+            this.wordSearcher(inputRes);
 
         });
+
+
 
         Text definition = new Text("Definition");
         definition.setX(550);
@@ -181,7 +210,7 @@ public class App extends Application{
         root.getChildren().add(addWordButton);
         root.getChildren().add(editWordButton);
         root.getChildren().add(eraseWordButton);
-
+        root.getChildren().add(grid);
 
         scene = new Scene(root, WIDTH, HEIGHT);
 
@@ -260,5 +289,109 @@ public class App extends Application{
 
 
 
+    }
+
+    private void wordSearcher(String input) {
+
+        // Hoàn thành hàm getSearch ở dưới cùng nhé. Hàm này trả về 1 ArrayList là danh sách các từ tìm được
+
+        ObservableList<Word> foundedWord = FXCollections.observableArrayList();
+        ArrayList<Word> words = this.getSearch();
+
+        foundedWord.removeAll(words);
+        foundedWord.addAll(words);
+        ListView<Word> wordList = new ListView<Word>(foundedWord);
+        wordList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        // Từ vừa search
+        Text target = new Text();
+//
+        // Tạo nút phát âm từ
+        Button speaker = new Button();
+
+        // Từ loại
+        Text type = new Text();
+
+        // Phần giải nghĩa
+        Text explain = new Text();
+
+        grid.add(target, 0, 0);
+        grid.add(type, 0, 1);
+        grid.add(explain, 0, 2);
+        root.getChildren().add(speaker);
+
+        wordList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Word>() {
+            @Override
+            public void changed(ObservableValue<? extends Word> observable, Word oldValue, Word newValue) {
+
+
+                grid.setVgap(20);
+                grid.setMinWidth(500);
+                grid.setMinHeight(500);
+                grid.setLayoutX(300);
+                grid.setLayoutY(30);
+                grid.setPadding(new Insets(20));
+                grid.setHgap(10);
+                grid.setVgap(10);
+
+
+                // Từ vừa search
+                target.setText(newValue.wordTarget);
+                Font targetFont = Font.loadFont("file:src/main/resources/Alegreya/Alegreya.ttf", 25);
+                target.setFont(targetFont);
+
+                // Nút phát âm
+                FileInputStream spk = null;
+                try {
+                    spk = new FileInputStream("src/main/resources/speak.png");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Image spkButton = new Image(spk);
+                speaker.setGraphic(new ImageView(spkButton));
+                speaker.setScaleX(0.035);
+                speaker.setScaleY(0.035);
+                speaker.setLayoutX(100);
+                speaker.setLayoutY(-475);
+                speaker.setOnAction(e -> {
+                    // Hàm phát âm từ ở đây.
+                    // Type your code here...
+
+
+                });
+
+                // Từ loại.
+                type.setText('(' + newValue.wordType + ')');
+                Font wordTypeFont = Font.loadFont("file:src/main/resources/Alegreya/Alegreya-Italic.ttf", 22);
+                type.setFont(wordTypeFont);
+                type.setFill(Color.rgb(5 , 112, 180));
+
+                // Giải thích
+                explain.setText( "Định nghĩa: " + newValue.wordExplain);
+                Font explainFont = Font.loadFont("file:src/main/resources/Alegreya/Alegreya.ttf", 25);
+                explain.setFont(explainFont);
+            }
+        });
+
+        wordList.setLayoutX(15);
+        wordList.setLayoutY(180);
+        wordList.setMinWidth(270);
+        wordList.setMinHeight(HEIGHT - 200);
+        wordList.setPadding(new Insets(10));
+
+        root.getChildren().add(wordList);
+
+    }
+
+    /**
+     * Hàm tìm kiếm từ.
+     * @return output.
+     */
+    public ArrayList<Word> getSearch() {
+
+        ArrayList<Word> output = new ArrayList<Word>();
+        output.add(word1);
+        output.add(word2);
+        return output;
     }
 }
