@@ -119,6 +119,9 @@ public class App extends Application{
         input.setPromptText("Search");
         input.setOnAction(e -> {
 
+            String inputRes = input.getText();
+            //inputRes là biến được người dùng nhập vào từ ô search.
+
         });
 
         Text definition = new Text("Definition");
@@ -167,17 +170,6 @@ public class App extends Application{
             this.showEraseWordDialog();
         });
 
-        // Grid pane test.
-        GridPane grid = new GridPane();
-        Text wordType = new Text();
-        wordType.setText("Noun udhaewqoqrivbcahiwuaheriowhqefjnkjcanvmcmxndjkfahsoieruweuqifhcvkjhsdiuweqr");
-        wordType.setFill(Color.rgb(0, 0, 0));
-        wordType.setRotate(45);
-        grid.getChildren().add(wordType);
-        grid.setLayoutX(400);
-        grid.setLayoutY(100);
-        grid.setMaxWidth(0.1);
-        grid.setMaxHeight(0.1);
 
         root.getChildren().add(viewBgr);
         root.getChildren().add(searchBox);
@@ -189,7 +181,7 @@ public class App extends Application{
         root.getChildren().add(addWordButton);
         root.getChildren().add(editWordButton);
         root.getChildren().add(eraseWordButton);
-        root.getChildren().add(grid);
+
 
         scene = new Scene(root, WIDTH, HEIGHT);
 
