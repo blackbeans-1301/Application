@@ -3,38 +3,31 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.Border;
 import javafx.scene.image.ImageView;
 
-import javax.swing.text.html.Option;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Observable;
 import java.util.Optional;
 
 /**
- * 1.
+ *  CHÚ ÝYYYYYYYYYYYYYY.
+ *  1. Hoàn thành hàm getSearch ở cuối cùng, LINE 394.
+ *  2. Hoàn thành hàm showAddWordDialog, LINE 230.
+ *  3. Hoàn thành hàm showEditWordDialog, LINE 260.
+ *  4. Hoàn thành hàm showEraseWordDialog, LINE 283.
+ *  5. Hoàn thành hàm phát âm tiếng anh, LINE 363.
  */
 
 public class App extends Application{
